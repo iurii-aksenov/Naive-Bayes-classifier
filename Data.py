@@ -28,8 +28,7 @@ class Data:
         subject_words = subject.replace("\n", "").split(" ")
         body_words = body.replace("\n", "").split(" ")
 
-        subject_words = map(int, subject_words) if (
-            subject_words[0] != "") else [0]
+        subject_words = map(int, subject_words) if (subject_words[0] != "") else [0]
         body_words = map(int, body_words) if (body_words[0] != "") else [0]
 
         return Mail(subject_words, body_words)
