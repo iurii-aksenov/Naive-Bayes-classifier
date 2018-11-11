@@ -5,30 +5,8 @@ from NaiveBayesClassifier import BayesClassifier
 from Data import Data, DataPart
 from WordsStatistic import WordsStatistic
 from MailComplexAnalizator import MailComplexAnalizator
-
-
-def f_score(test_data, predicted_data):
-    small_number = 0.000000000000000001
-    true_positive = small_number
-    false_positive = small_number
-    true_negative = small_number
-    false_negative = small_number
-
-    for i in range(len(predicted_data)):
-        if (test_data[i] == 0) and (predicted_data[i] == 0):
-            true_negative += 1
-        if (test_data[i] == 0) and (predicted_data[i] == 1):
-            false_positive += 1
-        if (test_data[i] == 1) and (predicted_data[i] == 1):
-            true_positive += 1
-        if (test_data[i] == 1) and (predicted_data[i] == 0):
-            false_negative += 1
-
-    precision = true_positive / (true_positive + false_positive)
-    recall = true_positive / (true_positive + false_negative)
-    fscore = 2*(precision*recall) / (precision+recall)
-
-    return fscore
+from Utils import *
+import numpy as np
 
 
 def main():
@@ -37,6 +15,9 @@ def main():
 
     folds = list(data.parts.keys())
     f_scores = []
+
+    global_test_data = []
+    global_predicted_data = []
 
     for test_fold in folds:
         test_data = []
@@ -55,15 +36,21 @@ def main():
 
         for spam_mail in test_mails.spams:
             test_data.append(1)
-            predicted_data.append(
-                int(analizator.is_spam(spam_mail, is_check_incomings=True, accounting_ratio_subject=1, accounting_ration_body=1, accounting_ratio_words=1)))
+            global_test_data.append(1)
+            is_spam = int(analizator.is_spam(spam_mail, is_check_incomings=True,
+                                             accounting_ratio_subject=1, accounting_ration_body=1, accounting_ratio_words=1))
+            predicted_data.append(is_spam)
+            global_predicted_data.append(is_spam)
 
         for ham_mail in test_mails.hams:
             test_data.append(0)
-            predicted_data.append(
-                int(analizator.is_spam(ham_mail, is_check_incomings=True, accounting_ratio_subject=1, accounting_ration_body=1, accounting_ratio_words=1)))
+            global_test_data.append(0)
+            is_spam = int(analizator.is_spam(ham_mail, is_check_incomings=True,
+                                             accounting_ratio_subject=1, accounting_ration_body=1, accounting_ratio_words=1))
+            predicted_data.append(is_spam)
+            global_predicted_data.append(is_spam)
 
-        fscore = f_score(test_data, predicted_data)
+        fscore = Metrics.f_score(test_data, predicted_data)
         print("test_fold: " + test_fold + " calculated fscore: " +
               str(fscore) + "---------------------------------------------------")
         f_scores.append(fscore)
@@ -72,6 +59,12 @@ def main():
     f_score_average = float(sum(f_scores)) / float(len(f_scores))
 
     print("fscore:" + str(f_score_average))
+
+    print("------- confusion matrix ------")
+    metrics = Metrics.get_metrics(global_test_data, global_predicted_data)
+
+    plot_confusion_matrix(cm = np.array([[ metrics[0], metrics[1]],
+                                        [metrics[3], metrics[2]]]), normalize=True, target_names=["ham", "spam"], title="Confusion Matrix, Normalized")
 
 
 if __name__ == "__main__":
