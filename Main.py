@@ -4,6 +4,7 @@ from Mail import *
 from NaiveBayesClassifier import *
 from Data import *
 from WordsStatistic import *
+from MailComplexAnalizator import *
 
 
 def main():
@@ -12,59 +13,18 @@ def main():
 
     folds = list(data.parts.keys())
 
-    train_all_words = WordsStatistic()
-    train_subject_words = WordsStatistic()
-    train_body_words = WordsStatistic()
-
-    test__words = WordsStatistic()
-    test_subject_words = WordsStatistic()
-    test_body_words = WordsStatistic()
-
     test_fold_name = folds[0]
-
     train_fold_name = folds[1]
-    add_to_word_statistics(
-        data.parts[train_fold_name], train_all_words, train_subject_words, train_body_words)
 
     test_mails: DataPart = data.parts[test_fold_name]
     spam_mails: List[Mail] = test_mails.spams
     spam_mail: Mail = spam_mails[0]
 
-    print("-------------------      ---------------------------")
+    analizator  = MailComplexAnalizator();
+    analizator.add_to_word_statistics(data.parts[train_fold_name])
 
-    classifier = BayesClassifier()
-    classifier.train(train_subject_words)
-    probabilities: [float, float] = classifier.predict(spam_mail.subject_words)
-    print("ham: " + str(probabilities[0]) + " spam: " + str(probabilities[1]))
+    print("is spam: " + str(analizator.is_spam(spam_mail, is_check_incomings=True)))
 
-    classifier = BayesClassifier()
-    classifier.train(train_body_words)
-    probabilities: [float, float] = classifier.predict(spam_mail.body_words)
-    print("ham: " + str(probabilities[0]) + " spam: " + str(probabilities[1]))
-
-    classifier = BayesClassifier()
-    classifier.train(train_all_words)
-    probabilities: [float, float] = classifier.predict(spam_mail.words)
-    print("ham: " + str(probabilities[0]) + " spam: " + str(probabilities[1]))
-
-    print("-------------------   income   ---------------------------")
-
-    classifier = BayesClassifier()
-    classifier.train(train_subject_words)
-    probabilities: [float, float] = classifier.predict(
-        spam_mail.subject_words, True)
-    print("ham: " + str(probabilities[0]) + " spam: " + str(probabilities[1]))
-
-    classifier = BayesClassifier()
-    classifier.train(train_body_words)
-    probabilities: [float, float] = classifier.predict(
-        spam_mail.body_words, True)
-    print("ham: " + str(probabilities[0]) + " spam: " + str(probabilities[1]))
-
-    classifier = BayesClassifier()
-    classifier.train(train_all_words)
-    probabilities: [float, float] = classifier.predict(spam_mail.words, True)
-    print("ham: " + str(probabilities[0]) + " spam: " + str(probabilities[1]))
 
     # for test_fold in folds:
     #     add_to_word_statistics(
@@ -73,20 +33,6 @@ def main():
     #         if train_fold != test_fold:
     #             add_to_word_statistics(
     #                 data.parts[train_fold], train__words, train_subject_words, train_body_words)
-
-
-def add_to_word_statistics(data_part: DataPart, words_statistic: WordsStatistic, subject_statistic: WordsStatistic, body_statistic: WordsStatistic):
-    hams: List[Mail] = data_part.hams
-    spams: List[Mail] = data_part.spams
-    for item in spams:
-        words_statistic.add_spam_words(item.words)
-        subject_statistic.add_spam_words(item.subject_words)
-        body_statistic.add_spam_words(item.body_words)
-
-    for item in hams:
-        words_statistic.add_ham_words(item.words)
-        subject_statistic.add_ham_words(item.subject_words)
-        body_statistic.add_ham_words(item.body_words)
 
    # def from_data_part_to_wrods_statistic
     # print(str(fold_statistics_words))
@@ -101,3 +47,34 @@ print("Hello world")
 
 
 # Упростить всё. Сразу читать по фодам и сразу записывать в глобальный диктионари. Можно вывети статистику общую по словам в файл
+
+
+# def calculateParameters(real, predicted):
+#     small_number = 0.000000000000000001
+#     true_positive = 0
+#     false_positive = 0
+#     true_negative = 0
+#     false_negative = 0
+
+#     for i in range(len(predictions)):
+#         if (testData[i].label == 0) and (predictions[i] == 0):
+#             trueNegative += 1
+#         if (testData[i].label == 0) and (predictions[i] == 1):
+#             falsePositive += 1
+#         if (testData[i].label == 1) and (predictions[i] == 1):
+#             truePositive += 1
+#         if (testData[i].label == 1) and (predictions[i] == 0):
+#             falseNegative += 1
+
+#     positive = smallNumber if (
+#         truePositive + falseNegative) == 0 else truePositive + falseNegative
+#     negative = smallNumber if (
+#         trueNegative + falsePositive) == 0 else trueNegative + falsePositive
+#     precision = truePositive / \
+#         (smallNumber if (truePositive + falsePositive)
+#          == 0 else truePositive + falsePositive)
+#     accuracy = (truePositive + trueNegative) / (positive + negative)
+#     fscore = 2*(precision*recall) / \
+#         (smallNumber if (precision+recall) == 0 else precision+recall)
+
+#     return (recall, specificity, precision, accuracy, fscore)
