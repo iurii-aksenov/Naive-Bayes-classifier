@@ -6,7 +6,6 @@ from Data import Data, DataPart
 from WordsStatistic import WordsStatistic
 from MailComplexAnalizator import MailComplexAnalizator
 from Utils import *
-import numpy as np
 
 
 def main():
@@ -55,16 +54,14 @@ def main():
               str(fscore) + "---------------------------------------------------")
         f_scores.append(fscore)
 
-    print(" ".join(map(str, f_scores)))
+    #print(" ".join(map(str, f_scores)))
     f_score_average = float(sum(f_scores)) / float(len(f_scores))
 
     print("fscore:" + str(f_score_average))
 
     print("------- confusion matrix ------")
-    metrics = Metrics.get_metrics(global_test_data, global_predicted_data)
-
-    plot_confusion_matrix(cm = np.array([[ metrics[0], metrics[1]],
-                                        [metrics[3], metrics[2]]]), normalize=True, target_names=["ham", "spam"], title="Confusion Matrix, Normalized")
+    Metrics.plot_confusion_matrix(global_test_data, global_predicted_data)
+    
 
 
 if __name__ == "__main__":

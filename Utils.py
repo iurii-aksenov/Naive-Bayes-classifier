@@ -1,6 +1,9 @@
+from typing import List
+
+
 class Metrics:
     @staticmethod
-    def get_metrics(test_data: list, predicted_data:list):
+    def get_metrics(test_data: list, predicted_data: list):
         small_number = 0.000000000000000001
         true_positive = small_number
         false_positive = small_number
@@ -33,13 +36,14 @@ class Metrics:
 
         return (fscore)
 
+    @staticmethod
+    def plot_confusion_matrix(test_data, predicted_data):
+        import numpy as np
+        metrics = Metrics.get_metrics(test_data, predicted_data)
+        aplot_confusion_matrix(cm=np.array([[metrics[0], metrics[1]],
+                                            [metrics[3], metrics[2]]]), normalize=True, target_names=["ham", "spam"], title="Confusion Matrix, Normalized")
 
-def plot_confusion_matrix(cm,
-                          target_names,
-                          title='Confusion matrix',
-                          cmap=None,
-                          normalize=True):
-
+def aplot_confusion_matrix(cm, target_names, title='Confusion matrix', cmap=None, normalize=True):
 
     import matplotlib.pyplot as plt
     import numpy as np
@@ -64,20 +68,19 @@ def plot_confusion_matrix(cm,
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-
     thresh = cm.max() / 1.5 if normalize else cm.max() / 2
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
         if normalize:
             plt.text(j, i, "{:0.4f}".format(cm[i, j]),
-                     horizontalalignment="center",
-                     color="white" if cm[i, j] > thresh else "black")
+                        horizontalalignment="center",
+                        color="white" if cm[i, j] > thresh else "black")
         else:
             plt.text(j, i, "{:,}".format(cm[i, j]),
-                     horizontalalignment="center",
-                     color="white" if cm[i, j] > thresh else "black")
-
+                        horizontalalignment="center",
+                        color="white" if cm[i, j] > thresh else "black")
 
     plt.tight_layout()
     plt.ylabel('True label')
-    plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
+    plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(
+        accuracy, misclass))
     plt.show()
