@@ -6,8 +6,12 @@ from Mail import *
 
 
 class DataPart:
-    hams: List[Mail] = []
-    spams: List[Mail] = []
+    hams: List[Mail]
+    spams: List[Mail]
+
+    def __init__(self):
+        self.spams = []
+        self.hams = []
 
     def __str__(self):
         return "hams: " + str(self.hams) + \
@@ -15,7 +19,10 @@ class DataPart:
 
 
 class Data:
-    parts: Dict[str, DataPart] = dict()
+    parts: Dict[str, DataPart]
+
+    def __init__(self):
+        self.parts = dict()
 
     def read_mail(self, path: str):
         subject: str = ""
@@ -36,14 +43,13 @@ class Data:
     def read_data(self, root_data_path: str):
         folders = os.listdir(root_data_path)
         for folder in folders:
-            self.parts[folder] = DataPart()
+            part = DataPart()
             with os.scandir(root_data_path + "/" + folder) as files:
                 for file in files:
                     file_path = root_data_path + "/" + folder + "/" + file.name
                     mail = self.read_mail(file_path)
                     if("legit" in file.name):
-                        part: DataPart = self.parts[folder]
                         part.hams.append(mail)
                     else:
-                        part: DataPart = self.parts[folder]
                         part.spams.append(mail)
+            self.parts[folder] = part
