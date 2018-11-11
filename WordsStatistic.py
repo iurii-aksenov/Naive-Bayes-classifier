@@ -1,36 +1,36 @@
 from typing import Dict
 
+
 class WordsStatistic:
-    hams: Dict[int, int] = dict()
-    spams: Dict[int, int] = dict()
+    hams: Dict[int, int]
+    hams_count: int
 
-    def get_hams_count(self):
-        result: int = 0
-        for key in self.hams:
-            result += self.hams[key]
-        return result
+    spams: Dict[int, int]
+    spams_count: int
 
-    def get_spams_count(self):
-        result: int = 0
-        for key in self.spams:
-            result += self.spams[key]
-        return result
+    def __init__(self):
+        self.hams = dict()
+        self.hams_count = 0
+        self.spams = dict()
+        self.spams_count = 0
 
     def add_ham_words(self, words: Dict[int, int]):
         for word in words:
-            self.add_ham_word(word, words[word])
+            self.__add_ham_word(word, words[word])
 
     def add_spam_words(self, words: Dict[int, int]):
         for word in words:
-            self.add_spam_word(word, words[word])
+            self.__add_spam_word(word, words[word])
 
-    def add_ham_word(self, word: int, count: int = 1):
+    def __add_ham_word(self, word: int, count: int = 1):
+        self.hams_count += count
         if(word in self.hams):
             self.hams[word] += count
         else:
             self.hams[word] = count
 
-    def add_spam_word(self, word: int, count: int = 1):
+    def __add_spam_word(self, word: int, count: int = 1):
+        self.spams_count += count
         if(word in self.spams):
             self.spams[word] += count
         else:
