@@ -7,7 +7,6 @@ from WordsStatistic import WordsStatistic
 from MailComplexAnalizator import MailComplexAnalizator
 
 
-
 def f_score(test_data, predicted_data):
     small_number = 0.000000000000000001
     true_positive = small_number
@@ -49,7 +48,7 @@ def main():
         for train_fold in folds:
             if train_fold != test_fold:
                 analizator.add_to_word_statistics(data.parts[train_fold])
-        test_mails: DataPart = data.parts[train_fold]
+        test_mails: DataPart = data.parts[test_fold]
 
         print("test_fold: " + test_fold +
               " calculate fscore ---------------------------------------------------")
@@ -57,12 +56,12 @@ def main():
         for spam_mail in test_mails.spams:
             test_data.append(1)
             predicted_data.append(
-                int(analizator.is_spam(spam_mail, is_check_incomings=True)))
+                int(analizator.is_spam(spam_mail, is_check_incomings=True, accounting_ratio_subject=1, accounting_ration_body=1, accounting_ratio_words=1)))
 
         for ham_mail in test_mails.hams:
             test_data.append(0)
             predicted_data.append(
-                int(analizator.is_spam(ham_mail, is_check_incomings=True)))
+                int(analizator.is_spam(ham_mail, is_check_incomings=True, accounting_ratio_subject=1, accounting_ration_body=1, accounting_ratio_words=1)))
 
         fscore = f_score(test_data, predicted_data)
         print("test_fold: " + test_fold + " calculated fscore: " +
@@ -82,5 +81,3 @@ if __name__ == "__main__":
 # можно использовать ещё окно контекста для понимания отношения слов word2vec
 
 print("Hello world")
-
-
