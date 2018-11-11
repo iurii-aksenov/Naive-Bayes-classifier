@@ -4,6 +4,7 @@ from WordsStatistic import WordsStatistic
 from NaiveBayesClassifier import BayesClassifier
 from Mail import Mail
 from Data import DataPart
+from Logging import Logging
 
 
 class MailComplexAnalizator:
@@ -36,7 +37,9 @@ class MailComplexAnalizator:
         spam: float = words_predict[1] * accounting_ratio_words + subject_predict[1] * \
             accounting_ratio_subject + body_predict[1] * accounting_ration_body
 
-        print("mail: " + mail.file_name + "; " +
+        
+
+        Logging.log("mail: " + mail.file_name + "; " +
               "words_predict: (ham: " + str(words_predict[0])+", " + "spam: " + str(words_predict[1]) + "); " +
               "subject_predict: (ham: " + str(subject_predict[0])+", " + "spam: " + str(subject_predict[1]) + "); " +
               "body_predict: (ham: " + str(body_predict[0]) +
