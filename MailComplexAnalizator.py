@@ -1,9 +1,10 @@
 from typing import List
 
-from WordsStatistic import *
-from NaiveBayesClassifier import *
-from Mail import *
+from WordsStatistic import WordsStatistic
+from NaiveBayesClassifier import BayesClassifier
+from Mail import Mail
 from Data import DataPart
+
 
 class MailComplexAnalizator:
     words_statistic: WordsStatistic
@@ -39,7 +40,8 @@ class MailComplexAnalizator:
               "words_predict: (ham: " + str(words_predict[0])+", " + "spam: " + str(words_predict[1]) + "); " +
               "subject_predict: (ham: " + str(subject_predict[0])+", " + "spam: " + str(subject_predict[1]) + "); " +
               "body_predict: (ham: " + str(body_predict[0]) +
-              ", " + "spam: " + str(body_predict[1]) + "); "
+              ", " + "spam: " + str(body_predict[1]) + "); " +
+              "mail_ham: " + str(ham) + " mail_spam: " + str(spam) + ";"
               )
 
         return spam > ham
