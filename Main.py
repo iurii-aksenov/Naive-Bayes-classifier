@@ -7,26 +7,88 @@ from WordsStatistic import *
 from MailComplexAnalizator import *
 
 
+def f_score(test_data, predicted_data):
+    small_number = 0.000000000000000001
+    true_positive = small_number
+    false_positive = small_number
+    true_negative = small_number
+    false_negative = small_number
+
+    for i in range(len(predicted_data)):
+        if (test_data[i] == 0) and (predicted_data[i] == 0):
+            true_negative += 1
+        if (test_data[i] == 0) and (predicted_data[i] == 1):
+            false_positive += 1
+        if (test_data[i] == 1) and (predicted_data[i] == 1):
+            true_positive += 1
+        if (test_data[i] == 1) and (predicted_data[i] == 0):
+            false_negative += 1
+
+    precision = true_positive / (true_positive + false_positive)
+    recall = true_positive / (true_positive + false_negative)
+    fscore = 2*(precision*recall) / (precision+recall)
+
+    return fscore
+
+
 def main():
     data = Data()
     data.read_data("./Dataset")
 
     folds = list(data.parts.keys())
+    f_scores = []
 
-    test_fold_name = folds[0]
-    train_fold_name = folds[1]
+    for test_fold in folds:
+        test_data = []
+        predicted_data = []
 
-    test_mails: DataPart = data.parts[test_fold_name]
-    spam_mails: List[Mail] = test_mails.spams
-    spam_mail: Mail = spam_mails[0]
+        print("test_fold: "+ test_fold + "-------------------------------------------------------------------")
+        analizator = MailComplexAnalizator()
+        for train_fold in folds:
+            if train_fold != test_fold:
+                analizator.add_to_word_statistics(data.parts[train_fold])
+        test_mails: DataPart = data.parts[train_fold]
 
-    ham_mail = test_mails.hams[0]
+        print("test_fold: "+ test_fold + " calculate fscore ---------------------------------------------------")
 
-    analizator  = MailComplexAnalizator();
-    analizator.add_to_word_statistics(data.parts[train_fold_name])
+        for spam_mail in test_mails.spams:
+            test_data.append(1)
+            predicted_data.append(int(analizator.is_spam(spam_mail, is_check_incomings=True)))
 
-    print("is spam: " + str(analizator.is_spam(ham_mail, is_check_incomings=True)))
+        for ham_mail in test_mails.hams:
+            test_data.append(0)
+            predicted_data.append(int(analizator.is_spam(ham_mail, is_check_incomings=True)))
 
+        fscore  = f_score(test_data, predicted_data)
+        print("test_fold: "+ test_fold + " calculated fscore: " + str(fscore) + "---------------------------------------------------")
+        f_scores.append(fscore)
+
+
+
+    # test_fold_name = folds[0]
+    # train_fold_name = folds[1]
+
+    
+
+    # analizator = MailComplexAnalizator()
+    # analizator.add_to_word_statistics(data.parts[train_fold_name])
+
+    # test_data = []
+    # predicted_data = []
+
+    # test_mails: DataPart = data.parts[test_fold_name]
+    # for spam_mail in test_mails.spams:
+    #     test_data.append(1)
+    #     predicted_data.append(int(analizator.is_spam(spam_mail, is_check_incomings=True)))
+
+    # for ham_mail in test_mails.hams:
+    #     test_data.append(1)
+    #     predicted_data.append(int(analizator.is_spam(ham_mail, is_check_incomings=True)))
+
+    print(" ".join(map(str,f_scores)))
+    f_score_average  = float(sum(f_scores)) / float(len(f_scores))
+
+    print("fscore:" + str(f_score_average))
 
     # for test_fold in folds:
     #     add_to_word_statistics(
@@ -51,32 +113,6 @@ print("Hello world")
 # Упростить всё. Сразу читать по фодам и сразу записывать в глобальный диктионари. Можно вывети статистику общую по словам в файл
 
 
-# def calculateParameters(real, predicted):
-#     small_number = 0.000000000000000001
-#     true_positive = 0
-#     false_positive = 0
-#     true_negative = 0
-#     false_negative = 0
 
-#     for i in range(len(predictions)):
-#         if (testData[i].label == 0) and (predictions[i] == 0):
-#             trueNegative += 1
-#         if (testData[i].label == 0) and (predictions[i] == 1):
-#             falsePositive += 1
-#         if (testData[i].label == 1) and (predictions[i] == 1):
-#             truePositive += 1
-#         if (testData[i].label == 1) and (predictions[i] == 0):
-#             falseNegative += 1
 
-#     positive = smallNumber if (
-#         truePositive + falseNegative) == 0 else truePositive + falseNegative
-#     negative = smallNumber if (
-#         trueNegative + falsePositive) == 0 else trueNegative + falsePositive
-#     precision = truePositive / \
-#         (smallNumber if (truePositive + falsePositive)
-#          == 0 else truePositive + falsePositive)
-#     accuracy = (truePositive + trueNegative) / (positive + negative)
-#     fscore = 2*(precision*recall) / \
-#         (smallNumber if (precision+recall) == 0 else precision+recall)
 
-#     return (recall, specificity, precision, accuracy, fscore)
