@@ -20,10 +20,12 @@ def main():
     spam_mails: List[Mail] = test_mails.spams
     spam_mail: Mail = spam_mails[0]
 
+    ham_mail = test_mails.hams[0]
+
     analizator  = MailComplexAnalizator();
     analizator.add_to_word_statistics(data.parts[train_fold_name])
 
-    print("is spam: " + str(analizator.is_spam(spam_mail, is_check_incomings=True)))
+    print("is spam: " + str(analizator.is_spam(ham_mail, is_check_incomings=True)))
 
 
     # for test_fold in folds:
