@@ -5,7 +5,7 @@ from NaiveBayesClassifier import BayesClassifier
 from Data import Data, DataPart
 from WordsStatistic import WordsStatistic
 from MailComplexAnalizator import MailComplexAnalizator
-from Utils import *
+from Utils import Metrics
 
 
 def main():
@@ -61,7 +61,6 @@ def main():
 
     print("------- confusion matrix ------")
     Metrics.plot_confusion_matrix(global_test_data, global_predicted_data)
-    
 
 
 if __name__ == "__main__":
