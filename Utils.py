@@ -43,6 +43,7 @@ class Metrics:
         aplot_confusion_matrix(cm=np.array([[metrics[0], metrics[1]],
                                             [metrics[3], metrics[2]]]), normalize=True, target_names=["ham", "spam"], title="Confusion Matrix, Normalized")
 
+
 def aplot_confusion_matrix(cm, target_names, title='Confusion matrix', cmap=None, normalize=True):
 
     import matplotlib.pyplot as plt
@@ -72,12 +73,12 @@ def aplot_confusion_matrix(cm, target_names, title='Confusion matrix', cmap=None
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
         if normalize:
             plt.text(j, i, "{:0.4f}".format(cm[i, j]),
-                        horizontalalignment="center",
-                        color="white" if cm[i, j] > thresh else "black")
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
         else:
             plt.text(j, i, "{:,}".format(cm[i, j]),
-                        horizontalalignment="center",
-                        color="white" if cm[i, j] > thresh else "black")
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
 
     plt.tight_layout()
     plt.ylabel('True label')
