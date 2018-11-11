@@ -27,7 +27,7 @@ class Metrics:
 
         true_positive = metrics[0]
         false_positive = metrics[1]
-        true_negative = metrics[2]
+        #true_negative = metrics[2]
         false_negative = metrics[3]
 
         precision = true_positive / (true_positive + false_positive)
