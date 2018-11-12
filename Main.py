@@ -37,7 +37,7 @@ def main():
             test_data.append(1)
             global_test_data.append(1)
             is_spam = int(analizator.is_spam(spam_mail, is_check_incomings=True,
-                                             accounting_ratio_subject=1, accounting_ration_body=1, accounting_ratio_words=1))
+                                             accounting_ratio_subject=1, accounting_ratio_body=1, accounting_ratio_words=1))
             predicted_data.append(is_spam)
             global_predicted_data.append(is_spam)
 
@@ -45,7 +45,7 @@ def main():
             test_data.append(0)
             global_test_data.append(0)
             is_spam = int(analizator.is_spam(ham_mail, is_check_incomings=True,
-                                             accounting_ratio_subject=1, accounting_ration_body=1, accounting_ratio_words=1))
+                                             accounting_ratio_subject=1, accounting_ratio_body=1, accounting_ratio_words=1))
             predicted_data.append(is_spam)
             global_predicted_data.append(is_spam)
 
