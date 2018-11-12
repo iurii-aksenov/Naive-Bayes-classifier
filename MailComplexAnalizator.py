@@ -25,8 +25,7 @@ class MailComplexAnalizator:
 
         classifier = BayesClassifier()
         classifier.train(self.subject_statistic)
-        subject_predict = classifier.predict(
-            mail.subject_words, is_check_incomings)
+        subject_predict = classifier.predict(mail.subject_words, is_check_incomings)
 
         classifier = BayesClassifier()
         classifier.train(self.body_statistic)
