@@ -6,7 +6,7 @@ from WordsStatistic import *
 
 class BayesClassifier:
 
-    smoothing_ration: float = 1.0
+    smoothing_ratio: float = 1.0
     all_words: float = 0.00000000000000001
     all_spams: int
     all_hams: int
@@ -61,5 +61,5 @@ class BayesClassifier:
         return self.__calculate_probability(word_in_spam_count, self.all_spams)
 
     def __calculate_probability(self, word_in_class: float, words_in_class: int):
-        return (self.smoothing_ration + word_in_class) / \
-            (self.smoothing_ration*self.all_words + words_in_class)
+        return (self.smoothing_ratio + word_in_class) / \
+            (self.smoothing_ratio * self.all_words + words_in_class)
