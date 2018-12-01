@@ -25,7 +25,8 @@ class MailComplexAnalizator:
 
         classifier = BayesClassifier()
         classifier.train(self.subject_statistic)
-        subject_predict = classifier.predict(mail.subject_words, is_check_incomings)
+        subject_predict = classifier.predict(
+            mail.subject_words, is_check_incomings)
 
         classifier = BayesClassifier()
         classifier.train(self.body_statistic)
@@ -35,6 +36,10 @@ class MailComplexAnalizator:
             accounting_ratio_subject + body_predict[0] * accounting_ratio_body
         spam: float = words_predict[1] * accounting_ratio_words + subject_predict[1] * \
             accounting_ratio_subject + body_predict[1] * accounting_ratio_body
+
+        ham_spam = ham + spam
+        ham = ham / ham_spam
+        spam = spam / ham_spam
 
         Logging.log("mail: " + mail.file_name + "; " +
                     "words_predict: (ham: " + str(words_predict[0])+", " + "spam: " + str(words_predict[1]) + "); " +
