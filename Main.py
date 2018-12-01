@@ -62,6 +62,16 @@ def main():
     print("------- confusion matrix ------")
     Metrics.plot_confusion_matrix(global_test_data, global_predicted_data)
 
+    count = 0
+    print(len(global_predicted_data))
+    print(len(global_test_data))
+
+    for i in range(len(global_test_data)):
+        if(global_predicted_data[i] != global_test_data[i]):
+            count += 1
+    print("Eror percent: " + str(count/len(global_predicted_data)))
+    print(count)
+    print(len(global_predicted_data))
 
 if __name__ == "__main__":
     main()
