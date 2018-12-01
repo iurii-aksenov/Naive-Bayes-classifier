@@ -51,7 +51,7 @@ class BayesClassifier:
         if(word in self.word_statistic.hams):
             word_in_ham_count = self.word_statistic.hams[word]
 
-        return self.__calculate_probability(word_in_ham_count, self.all_hams)
+        return 1.7*self.__calculate_probability(word_in_ham_count, self.all_hams)
 
     def __get_spam_probability(self, word: int):
         word_in_spam_count: int = 0
